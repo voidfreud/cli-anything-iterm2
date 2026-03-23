@@ -24,14 +24,14 @@ pip install iterm2 click prompt-toolkit
 ## Installation
 
 ```bash
-pip install git+https://github.com/HKUDS/CLI-Anything.git#subdirectory=iterm2/agent-harness
+pip install git+https://github.com/voidfreud/cli-anything-iterm2.git
 ```
 
 Or from source:
 
 ```bash
-git clone https://github.com/HKUDS/CLI-Anything.git
-cd CLI-Anything/iterm2/agent-harness
+git clone https://github.com/voidfreud/cli-anything-iterm2.git
+cd cli-anything-iterm2
 pip install -e .
 ```
 
@@ -130,7 +130,7 @@ cli-anything-iterm2 session split --vertical
 ## Running Tests
 
 ```bash
-cd CLI-Anything/iterm2/agent-harness
+cd cli-anything-iterm2
 
 # Unit tests (no iTerm2 needed)
 python3 -m pytest cli_anything/iterm2_ctl/tests/test_core.py -v
