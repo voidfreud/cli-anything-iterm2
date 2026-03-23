@@ -93,6 +93,44 @@ class TestAppStatus:
             assert "window_id" in result
 
 
+class TestWorkspaceSnapshot:
+    def test_workspace_snapshot_structure(self, iterm2_connection):
+        """snapshot returns session_count and sessions list with required keys."""
+        from cli_anything.iterm2_ctl.utils.iterm2_backend import run_iterm2
+        from cli_anything.iterm2_ctl.core.session import workspace_snapshot
+
+        result = run_iterm2(workspace_snapshot)
+        assert "session_count" in result
+        assert "sessions" in result
+        assert isinstance(result["sessions"], list)
+        assert result["session_count"] == len(result["sessions"])
+        print(f"\n  Snapshot: {result['session_count']} session(s)")
+        for s in result["sessions"]:
+            assert "session_id" in s
+            assert "name" in s
+            assert "window_id" in s
+            assert "tab_id" in s
+            assert "path" in s
+            assert "pid" in s
+            assert "process" in s
+            assert "role" in s
+            assert "last_line" in s
+            print(f"    {s['session_id']}  name={s['name']}  "
+                  f"process={s['process']}  path={s['path']}")
+
+    def test_workspace_snapshot_process_populated(self, iterm2_connection):
+        """process field should be a non-empty string for sessions with a running shell."""
+        from cli_anything.iterm2_ctl.utils.iterm2_backend import run_iterm2
+        from cli_anything.iterm2_ctl.core.session import workspace_snapshot
+
+        result = run_iterm2(workspace_snapshot)
+        if result["session_count"] > 0:
+            # At least one session should have a process name
+            processes = [s["process"] for s in result["sessions"] if s["process"]]
+            assert len(processes) > 0, "Expected at least one session with a process name"
+            print(f"\n  Processes found: {processes}")
+
+
 # ── Window tests ───────────────────────────────────────────────────────
 
 class TestWindowOperations:

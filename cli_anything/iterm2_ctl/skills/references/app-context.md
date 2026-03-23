@@ -1,5 +1,14 @@
 # App: Context, Variables, Dialogs, File Panels
 
+## Workspace orientation
+```bash
+cli-anything-iterm2 --json app snapshot                # rich snapshot: all sessions with path, process, role, last output line
+cli-anything-iterm2 --json app status                  # lightweight inventory: IDs and names only
+```
+
+`app snapshot` is the preferred orientation command — use it when landing in an existing workspace.
+Set `user.role` on panes so snapshot can identify them: `session set-var user.role "api-server"`
+
 ## Context management
 ```bash
 cli-anything-iterm2 --json app status                  # inventory all windows/tabs/sessions

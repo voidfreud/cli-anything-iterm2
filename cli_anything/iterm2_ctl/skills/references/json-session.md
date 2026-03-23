@@ -1,6 +1,16 @@
 # JSON Schemas — Session, Window, Tab
 
 ```json
+// app snapshot
+{"session_count": 3, "sessions": [
+  {"session_id": "...", "name": "api-server", "window_id": "...", "tab_id": "...",
+   "path": "/Users/alex/project", "pid": 12345, "process": "node",
+   "role": "api-server", "last_line": "Server listening on :3000"},
+  {"session_id": "...", "name": "shell", "window_id": "...", "tab_id": "...",
+   "path": "/Users/alex", "pid": 67890, "process": "zsh",
+   "role": null, "last_line": "$ "}
+]}
+
 // app status
 {"window_count": 2, "windows": [{"window_id": "...", "tabs": [...]}]}
 

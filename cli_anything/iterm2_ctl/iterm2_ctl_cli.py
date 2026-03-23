@@ -352,6 +352,30 @@ def app_save_panel(title, path, filename):
         output(result, f"Save to: {result['file']}")
 
 
+@app.command("snapshot")
+@handle_iterm2_error
+def app_snapshot():
+    """Rich workspace snapshot: every session with path, process, role, and last output line.
+
+    \b
+    Use this to orient in an existing workspace without reading full screen contents
+    for every pane. Returns name, current directory, foreground process, user.role
+    label, and the last non-empty visible line for each session.
+
+      cli-anything-iterm2 --json app snapshot
+    """
+    result = run_iterm2(sess_mod.workspace_snapshot)
+    output(result, f"Workspace: {result['session_count']} session(s)")
+    if not _json_output:
+        for s in result["sessions"]:
+            role_tag = f" [{s['role']}]" if s.get("role") else ""
+            process_tag = f" ({s['process']})" if s.get("process") else ""
+            path_tag = f"  {s['path']}" if s.get("path") else ""
+            click.echo(f"  {s['session_id']}  {s['name']}{role_tag}{process_tag}{path_tag}")
+            if s.get("last_line"):
+                click.echo(f"    > {s['last_line']}")
+
+
 # ── Window group ───────────────────────────────────────────────────────
 
 @cli.group()

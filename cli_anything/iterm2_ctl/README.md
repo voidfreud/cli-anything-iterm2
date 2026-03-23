@@ -56,7 +56,8 @@ cli-anything-iterm2
 ### One-shot commands
 
 ```bash
-# App status
+# App status & workspace orientation
+cli-anything-iterm2 --json app snapshot               # rich: path, process, role, last output per pane
 cli-anything-iterm2 app status
 cli-anything-iterm2 app current       # get focused window/tab/session
 cli-anything-iterm2 app context       # show saved context
@@ -170,4 +171,14 @@ Custom variables use a `user.` prefix:
 ```bash
 cli-anything-iterm2 session set-var user.project "myapp"
 cli-anything-iterm2 session get-var user.project
+```
+
+**Workspace labeling convention** — set `user.role` on panes when building a workspace so `app snapshot` can identify them:
+```bash
+cli-anything-iterm2 session set-var user.role "api-server"
+cli-anything-iterm2 session set-var user.role "log-tail"
+cli-anything-iterm2 session set-var user.role "editor"
+
+# Later — orient in one call
+cli-anything-iterm2 --json app snapshot
 ```
