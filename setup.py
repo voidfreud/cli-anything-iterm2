@@ -4,7 +4,7 @@ setup(
     name="cli-anything-iterm2",
     version="1.0.0",
     description="A stateful CLI harness for iTerm2 — control a running iTerm2 instance programmatically.",
-    long_description=open("cli_anything/iterm2_ctl/README.md").read(),
+    long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="voidfreud",
     python_requires=">=3.10",
