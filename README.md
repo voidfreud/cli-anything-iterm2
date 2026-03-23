@@ -46,11 +46,17 @@ iTerm2 → Preferences → General → Magic → Enable Python API ✓
 
 ## Installation
 
+**Recommended** (isolated, globally accessible):
+```bash
+uv tool install git+https://github.com/voidfreud/cli-anything-iterm2.git
+```
+
+Or with pip:
 ```bash
 pip install git+https://github.com/voidfreud/cli-anything-iterm2.git
 ```
 
-Or from source:
+From source (for development):
 ```bash
 git clone https://github.com/voidfreud/cli-anything-iterm2.git
 cd cli-anything-iterm2
@@ -68,7 +74,7 @@ cli-anything-iterm2 --help
 
 | Group | What it controls |
 |-------|-----------------|
-| `app` | App status, context management, app-level variables, modal dialogs, file panels |
+| `app` | Workspace snapshot, app status, context management, app-level variables, modal dialogs, file panels |
 | `window` | Create, list, close, resize, fullscreen windows |
 | `tab` | Create, list, close, activate tabs; navigate split panes by direction |
 | `session` | Send text, inject raw bytes, read screen, full scrollback, split panes, prompt detection |
@@ -94,7 +100,8 @@ Use `--json` for machine-readable output. Every command supports it.
 ### App & context
 
 ```bash
-cli-anything-iterm2 app status                  # window/tab/session inventory
+cli-anything-iterm2 --json app snapshot         # rich workspace orientation: path, process, role, last output per pane
+cli-anything-iterm2 app status                  # lightweight window/tab/session inventory
 cli-anything-iterm2 app current                 # focus + save context
 cli-anything-iterm2 app context                 # show saved context
 cli-anything-iterm2 app get-var hostname        # read app-level variable
@@ -228,8 +235,8 @@ cli-anything-iterm2 session send "npm run dev"
 ## Typical Agent Workflow
 
 ```bash
-# 1. Discover what's running
-cli-anything-iterm2 --json app status
+# 1. Orient — get every pane's name, path, process, role, and last output in one call
+cli-anything-iterm2 --json app snapshot
 
 # 2. Lock onto the focused session
 cli-anything-iterm2 app current
@@ -238,11 +245,12 @@ cli-anything-iterm2 app current
 cli-anything-iterm2 session send "git log --oneline -10"
 cli-anything-iterm2 --json session scrollback --tail 50 --strip
 
-# 4. Set up a multi-pane workspace
+# 4. Set up a multi-pane workspace — label panes so snapshot identifies them later
 cli-anything-iterm2 window create --profile "Default"
 cli-anything-iterm2 app current
 cli-anything-iterm2 session split --vertical --use-as-context
 cli-anything-iterm2 session send "python3 -m http.server 8000"
+cli-anything-iterm2 session set-var user.role "http-server"
 
 # 5. Wait for the server to start, then verify
 cli-anything-iterm2 session wait-prompt
@@ -305,29 +313,29 @@ cli-anything-iterm2 session get-var user.project
 
 ## Tests
 
-109 tests — unit tests run without iTerm2, E2E tests require a live instance.
+Unit tests run without iTerm2, E2E tests require a live instance.
 
 ```bash
 git clone https://github.com/voidfreud/cli-anything-iterm2.git
 cd cli-anything-iterm2
 pip install -e .
 
-# Unit tests (no iTerm2 needed) — 80 tests
+# Unit tests (no iTerm2 needed)
 python3 -m pytest cli_anything/iterm2_ctl/tests/test_core.py -v
 
-# E2E tests (iTerm2 must be running) — 29 tests
+# E2E tests (iTerm2 must be running)
 python3 -m pytest cli_anything/iterm2_ctl/tests/test_full_e2e.py -v -s
 
 # Full suite
 CLI_ANYTHING_FORCE_INSTALLED=1 python3 -m pytest cli_anything/iterm2_ctl/tests/ -v
 ```
 
-| Suite | Tests | Requires |
-|-------|-------|---------|
-| Unit | 80 | Nothing — pure logic |
-| E2E | 24 | iTerm2 running |
-| tmux E2E | 5 | iTerm2 + active `tmux -CC` session |
-| Subprocess | 6 | Installed `cli-anything-iterm2` command |
+| Suite | Requires |
+|-------|---------|
+| Unit | Nothing — pure logic |
+| E2E | iTerm2 running |
+| tmux E2E | iTerm2 + active `tmux -CC` session |
+| Subprocess | Installed `cli-anything-iterm2` command |
 
 ---
 

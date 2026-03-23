@@ -44,12 +44,31 @@ App
 
 | Group | Purpose |
 |-------|---------|
-| `app` | Application-level info and status |
-| `window` | Create, list, close, resize, arrange windows |
-| `tab` | Create, list, close, activate tabs |
-| `session` | Send text, read screen, split panes, manage sessions |
-| `profile` | List and inspect profiles |
-| `arrangement` | Save and restore window arrangements |
+| `app` | Workspace snapshot, app status, context management, app-level variables, modal dialogs, file panels |
+| `window` | Create, list, close, resize, fullscreen, reposition windows |
+| `tab` | Create, list, close, activate tabs; navigate split panes by direction |
+| `session` | Send text, inject bytes, read screen/scrollback, split panes, shell integration, session variables |
+| `profile` | List profiles, get profile details, list/apply color presets |
+| `arrangement` | Save and restore complete window/tab/pane layouts |
+| `tmux` | Full `tmux -CC` integration: bootstrap, connections, windows, send commands |
+| `broadcast` | Sync keystrokes across multiple panes simultaneously |
+| `menu` | Invoke any iTerm2 menu item programmatically |
+| `pref` | Read/write global iTerm2 preferences; tmux integration settings |
+
+### Workspace Orientation
+
+Use `app snapshot` as the first command when landing in any existing workspace:
+
+```bash
+cli-anything-iterm2 --json app snapshot
+```
+
+Returns for every session: name, current directory (`path`), foreground process, `user.role` label, and last visible output line — a full picture without reading each pane's screen contents individually.
+
+Label panes on setup so snapshot can identify them on re-entry:
+```bash
+cli-anything-iterm2 session set-var user.role "api-server"
+```
 
 ## Key API Patterns
 
